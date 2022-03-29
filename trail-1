@@ -1,0 +1,27 @@
+  pipeline {
+	    agent { label 'node' }
+	       stages {
+	          stage ("Stage 1: tomcat exists or not") {
+		            steps {
+			                 sh '"	echo "enter the name of the server"
+				                      read name
+				                    	ps -ef | grep $name
+			                     if ($? -eq 0);then
+			                      	stopRemainingStage = 0
+					                    echo "tomcat exists"
+				                    fi
+					                    echo "tomcat not exists in the server"'
+		      } 
+	       }
+	        stage ("Stage 2: Install tomcat") {
+		            steps {
+			               sh '"curl https://tomcat.apache.org/download-80.cgi
+				             wget https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.77/bin/apache-tomcat-8.5.77.tar.gz
+				             md5sum apache-tomcat-8.5.77.tar.gz
+				             tar xvzf apache-tomcat-8.5.77.tar.gz
+				             cd /home/ec2-user/apache-tomcat-8.5.77/bin
+				             ./startup.sh"'
+		            }
+	       }
+        }
+  }
